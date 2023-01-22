@@ -20,10 +20,6 @@ ploidy = args[2]
 gene_df_path = args[3]
 cnv_path= args[4]
 
-ploidy_samples = {sample:ploidy}
-
-
-
 amps = list()
 missing_gene_data_sample= list()
 gene_df = pd.read_csv(gene_df_path) 

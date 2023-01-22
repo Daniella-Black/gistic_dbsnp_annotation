@@ -70,9 +70,12 @@ for i in range(len(gene_df.index)):
     if len(contig_overlapping_gene)== 0:
         missing_gene_data_sample.append(gene.name + '_' + sample)
 #print(sample)
-missing_data_samples_gene_df = pd.DataFrame(missing_gene_data_sample)
-#missing_data_samples_gene_df = missing_data_samples_mdm2_df.rename (columns={0: 'missing_mdm2_samples'}) missing_data_samples_gene_df [['sample', 'gene']] = missing_data_samples_gene_df[0].str.split(', 1, expand=True)
-missing_data_samples_gene_df.drop(columns=[0])
+if len(missing_gene_data_sample) >0:
+    missing_data_samples_gene_df = pd.DataFrame(missing_gene_data_sample)
+    #missing_data_samples_gene_df = missing_data_samples_mdm2_df.rename (columns={0: 'missing_mdm2_samples'}) missing_data_samples_gene_df [['sample', 'gene']] = missing_data_samples_gene_df[0].str.split(', 1, expand=True)
+    missing_data_samples_gene_df.drop(columns=[0])
+else:
+    missing_data_samples_gene_df = pd.DataFrame(columns=[0])
 missing_data_samples_gene_df.to_csv('genes_with_missing_data.csv')
 #take the list of amps obtained in for loop above and convert to a table
 if len(amps) >0:

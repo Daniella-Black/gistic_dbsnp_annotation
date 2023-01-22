@@ -75,7 +75,10 @@ missing_data_samples_gene_df = pd.DataFrame(missing_gene_data_sample)
 missing_data_samples_gene_df.drop(columns=[0])
 missing_data_samples_gene_df.to_csv('genes_with_missing_data.csv')
 #take the list of amps obtained in for loop above and convert to a table
-amps_df = pd.DataFrame(amps)
-amps_df[[ 'chr', 'start', 'end','total_cn', 'sample']] = amps_df[0].str.split('_', 4, expand=True)
-amps_df.drop(columns=[0])
+if len(amps) >0:
+    amps_df = pd.DataFrame(amps)
+    amps_df[[ 'chr', 'start', 'end','total_cn', 'sample']] = amps_df[0].str.split('_', 4, expand=True)
+    amps_df.drop(columns=[0])
+else:
+    amps_df = pd.DataFrame(columns=[0])
 amps_df.to_csv('amplifications.csv')

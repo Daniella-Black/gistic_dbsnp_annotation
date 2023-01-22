@@ -1,5 +1,4 @@
 #!/usr/local/bin/python3
 
-args = commandArgs(trailingOnly=TRUE)
-sample <- args[1]
-mtr_input <- args[2]
+with open('readme.txt', 'w') as f:
+    f.write('readme')

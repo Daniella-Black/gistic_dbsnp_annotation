@@ -20,7 +20,7 @@ process  CloudOS_MTR_input{
     output:
     //file "genes_with_missing_data.csv"
     //file "amplifications.csv"
-    file "out.txt"
+    file "readme.txt"
  
     script:
     """

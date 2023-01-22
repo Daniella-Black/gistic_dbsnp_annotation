@@ -30,9 +30,9 @@ gene_df = pd.read_csv(gene_df_path)
 gene_df=gene_df.dropna()
 
 #set threshold for amplifications
-if ploidy_samples [sample]['Ploidy'] <2.5:
+if ploidy <2.5:
     amp_threshold = 5
-elif ploidy_samples [sample]['Ploidy'] >= 2.5:
+elif ploidy >= 2.5:
     amp_threshold = 9
 
 cnv = pd.read_csv(cnv_path, '\t')
@@ -49,7 +49,7 @@ for i in range(len(gene_df.index)):
     contig_overlapping_gene = list()
     cnv_chr = cnv.loc[cnv['seqnames'].astype('str') == gene.chrom]
     cnv_chr.index = pd.RangeIndex(len(cnv_chr.index))
-    for contig in range(len(list (cnv_chr['total_cn']))):
+    for contig in range(len(list(cnv_chr['total_cn']))):
         contig_range= SequenceRange('place_holder', int(cnv_chr['start'][contig]), int(cnv_chr['end'][contig]), str(cnv_chr['seqnames'][contig]))
         if contig_range.overlaps(gene):
             contig_overlapping_gene.append(id_list[contig])

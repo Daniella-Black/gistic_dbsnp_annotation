@@ -2,6 +2,7 @@
 
 import pandas as pd
 from dataclasses import dataclass
+import argparse
 
 @dataclass
 class SequenceRange:
@@ -15,11 +16,28 @@ class SequenceRange:
             return False
         return (other.start <= self.start <= other.end) or (other.start <= self.end <= other.end) or (self.start <= other.start <= self.end) or (self.start <= other.end <= self.end)
 
-sample = args[1]
-ploidy = args[2]
-gene_df_path = args[3]
-cnv_path= args[4]
+my_parser = argparse.ArgumentParser(description='find the missing data in cnv files')
+my_parser.add_argument('-sample',
+                       type=string,
+                       help='sample')
+my_parser.add_argument('-ploidy',
+                       type=float,
+                       help='ploidy')
+my_parser.add_argument('-gene_df',
+                       type=path,
+                       help='path to the df of genes and cooridnates of canonical transcript')
+my_parser.add_argument('-somatic_cnv_vcf',
+                       type=path,
+                       help='path to the mtr input cnv of the sample')
+####data input
 
+args = my_parser.parse_args()
+sample = args.sample
+ploidy = args.ploidy
+gene_df_path = args.gene_df
+cnv_path = args.somatic_cnv_vcf
+    
+    
 amps = list()
 missing_gene_data_sample= list()
 gene_df = pd.read_csv(gene_df_path) 

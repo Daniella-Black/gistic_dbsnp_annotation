@@ -10,7 +10,7 @@ Channel
 
 //run the script to make MTR input on above file paths
 process  CloudOS_MTR_input{
-    container = 'dockeraccountdani/fitms2:latest' 
+    container = 'dockeraccountdani/pydocker:latest' 
     tag"$tumour_sample_platekey"
     publishDir "${params.outdir}/$tumour_sample_platekey", mode: 'copy'
     
@@ -18,11 +18,10 @@ process  CloudOS_MTR_input{
     set val(tumour_sample_platekey), file(mtr_input) from ch_input
 
     output:
-    file "*_SNV_catalogues.pdf"
-    file "*_catalogue.csv"
-    //file "exposures.tsv"
-    path "results/*"
-    
+    //file "genes_with_missing_data.csv"
+    //file "amplifications.csv"
+    file "out.txt"
+ 
     script:
     """
     fitms_nf.R '$tumour_sample_platekey' '$mtr_input'

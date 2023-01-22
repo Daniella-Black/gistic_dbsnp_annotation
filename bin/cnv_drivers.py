@@ -18,16 +18,16 @@ class SequenceRange:
 
 my_parser = argparse.ArgumentParser(description='find the missing data in cnv files')
 my_parser.add_argument('-sample',
-                       type=string,
+                       type=str,
                        help='sample')
 my_parser.add_argument('-ploidy',
                        type=float,
                        help='ploidy')
 my_parser.add_argument('-gene_df',
-                       type=path,
+                       type=str,
                        help='path to the df of genes and cooridnates of canonical transcript')
 my_parser.add_argument('-somatic_cnv_vcf',
-                       type=path,
+                       type=str,
                        help='path to the mtr input cnv of the sample')
 ####data input
 

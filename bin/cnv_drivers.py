@@ -84,8 +84,8 @@ try:
             missing_gene_data_sample.append(gene.name + '_' + sample)
         ##report the genes in each amp
         if len(amps) > 0:    
-            for amp in range(amps_df.index):
-                amp_range= SequenceRange('place_holder', int(amp_df['start'][contig]), int(amp_df['end'][contig]), str(amp_df['chr'][contig]))
+            for amp in range(len(amps_df.index)):
+                amp_range= SequenceRange('place_holder', int(amp_df['start'][amp]), int(amp_df['end'][amp]), str(amp_df['chr'][amp]))
                 if amp_range.overlaps(gene) and amp_range.chrom == gene.chrom:
                     genes_in_amps[amp].append(gene.name)
                 else: 

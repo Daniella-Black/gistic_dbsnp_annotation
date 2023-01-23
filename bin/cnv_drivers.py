@@ -102,7 +102,7 @@ except FileNotFoundError as e:
 if len(missing_gene_data_sample) >0:
     missing_data_samples_gene_df = pd.DataFrame(missing_gene_data_sample)
     #missing_data_samples_gene_df = missing_data_samples_mdm2_df.rename(columns={0: 'missing_mdm2_samples'})
-    missing_data_samples_gene_df[['sample', 'gene']] = missing_data_samples_gene_df[0].str.split(', 1, expand=True)
+    missing_data_samples_gene_df[['sample', 'gene']] = missing_data_samples_gene_df[0].str.split('_', 1, expand=True)
     missing_data_samples_gene_df.drop(columns=[0])
 else:
     missing_data_samples_gene_df = pd.DataFrame(columns=[0])

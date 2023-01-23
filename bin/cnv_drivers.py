@@ -74,7 +74,7 @@ try:
         if len(contig_overlapping_gene)== 0:
             missing_gene_data_sample.append(gene.name + '_' + sample)
     #print(sample)
-    with open(sample + 'mtr_format_cnv_missing.txt', 'w') as f:
+    with open(sample + '_mtr_format_cnv_missing.txt', 'w') as f:
         f.write(sample+' complete')
 except FileNotFoundError as e:
     with open(sample + '_mtr_format_cnv_missing.txt', 'w') as f:

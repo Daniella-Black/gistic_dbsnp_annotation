@@ -77,7 +77,7 @@ try:
     with open(sample + 'mtr_format_cnv_missing.txt', 'w') as f:
         f.write(sample+' complete')
 except FileNotFoundError as e:
-    with open(sample + 'mtr_format_cnv_missing.txt', 'w') as f:
+    with open(sample + '_mtr_format_cnv_missing.txt', 'w') as f:
         f.write(sample+' no mtr format cnv file')
         
 if len(missing_gene_data_sample) >0:

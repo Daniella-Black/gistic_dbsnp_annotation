@@ -41,7 +41,6 @@ cnv_path = args.somatic_cnv_vcf
     
 amps = list()
 missing_gene_data_sample= list()
-genes_in_amps = list()
 gene_df = pd.read_csv(gene_df_path) 
 gene_df=gene_df.dropna()
 
@@ -70,6 +69,7 @@ try:
     else:
         amps_df = pd.DataFrame(columns=[0])
     ##for each contig (no matter if it is amplified) report whether any contig overlaps with gene of interest - this is to identify samples with no data for the gene of interest for i in range(len(gene_df.index)): ##need file with all coding gene name chromosome coordinates #for gene in gene_df:
+    genes_in_amps == [[] for _ in range(len(amps_df.index)lst[0)]
     for i in range(len(gene_df.index)):  
         gene  = SequenceRange(gene_df['gene_name'][i], gene_df['start'][i], gene_df['end'][i], gene_df['chr'][i])
         ##find the genes with missing data

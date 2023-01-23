@@ -41,6 +41,7 @@ cnv_path = args.somatic_cnv_vcf
     
 amps = list()
 missing_gene_data_sample= list()
+genes_in_amps = list()
 gene_df = pd.read_csv(gene_df_path) 
 gene_df=gene_df.dropna()
 
@@ -61,9 +62,17 @@ try:
     for contig in range(len(total_cn)):
         if total_cn[contig] >= amp_threshold: 
             amps.append(id_list[contig]) 
+    #take the list of amps obtained in for loop above and convert to a table
+    if len(amps) >0:
+        amps_df = pd.DataFrame(amps)
+        amps_df[[ 'chr', 'start', 'end','total_cn', 'sample']] = amps_df[0].str.split('_', 4, expand=True)
+        amps_df.drop(columns=[0])
+    else:
+        amps_df = pd.DataFrame(columns=[0])
     ##for each contig (no matter if it is amplified) report whether any contig overlaps with gene of interest - this is to identify samples with no data for the gene of interest for i in range(len(gene_df.index)): ##need file with all coding gene name chromosome coordinates #for gene in gene_df:
     for i in range(len(gene_df.index)):  
         gene  = SequenceRange(gene_df['gene_name'][i], gene_df['start'][i], gene_df['end'][i], gene_df['chr'][i])
+        ##find the genes with missing data
         contig_overlapping_gene = list()
         cnv_chr = cnv.loc[cnv['seqnames'].astype('str') == gene.chrom]
         cnv_chr.index = pd.RangeIndex(len(cnv_chr.index))
@@ -73,6 +82,16 @@ try:
                 contig_overlapping_gene.append(id_list[contig])
         if len(contig_overlapping_gene)== 0:
             missing_gene_data_sample.append(gene.name + '_' + sample)
+        ##report the genes in each amp
+        if len(amps) > 0:    
+            for amp in range(amps_df.index):
+                amp_range= SequenceRange('place_holder', int(amp_df['start'][contig]), int(amp_df['end'][contig]), str(amp_df['chr'][contig]))
+                if amp_range.overlaps(gene) and amp_range.chrom == gene.chrom:
+                    genes_in_amps[amp].append(gene.name)
+                else: 
+                    genes_in_amps[amp].append('NA')
+    amps_df['genes_in_amps'] = genes_in_amps
+        
     #print(sample)
     with open(sample + '_mtr_format_cnv_missing.txt', 'w') as f:
         f.write(sample+' complete')
@@ -83,16 +102,13 @@ except FileNotFoundError as e:
 if len(missing_gene_data_sample) >0:
     missing_data_samples_gene_df = pd.DataFrame(missing_gene_data_sample)
     #missing_data_samples_gene_df = missing_data_samples_mdm2_df.rename(columns={0: 'missing_mdm2_samples'})
-    missing_data_samples_gene_df [['sample', 'gene']] = missing_data_samples_gene_df[0].str.split(', 1, expand=True)
+    missing_data_samples_gene_df[['sample', 'gene']] = missing_data_samples_gene_df[0].str.split(', 1, expand=True)
     missing_data_samples_gene_df.drop(columns=[0])
 else:
     missing_data_samples_gene_df = pd.DataFrame(columns=[0])
+
+#output table of genes with missing data                                                                                                 
 missing_data_samples_gene_df.to_csv(sample + '_genes_with_missing_data.csv')
-#take the list of amps obtained in for loop above and convert to a table
-if len(amps) >0:
-    amps_df = pd.DataFrame(amps)
-    amps_df[[ 'chr', 'start', 'end','total_cn', 'sample']] = amps_df[0].str.split('_', 4, expand=True)
-    amps_df.drop(columns=[0])
-else:
-    amps_df = pd.DataFrame(columns=[0])
+
+#output amps_df
 amps_df.to_csv(sample + '_amplifications.csv')

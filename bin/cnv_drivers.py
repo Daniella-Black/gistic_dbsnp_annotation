@@ -42,7 +42,7 @@ cnv_path = args.somatic_cnv_vcf
 amps = list()
 missing_gene_data_sample= list()
 gene_df = pd.read_csv(gene_df_path) 
-gene_df=gene_df.dropna()
+#gene_df=gene_df.dropna()
 
 #set threshold for amplifications
 if ploidy <2.5:

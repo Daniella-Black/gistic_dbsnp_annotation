@@ -82,13 +82,13 @@ try:
             if contig_range.overlaps(gene):
                 contig_overlapping_gene.append(id_list[contig])
         if len(contig_overlapping_gene)== 0:
-            missing_gene_data_sample.append(gene.name + '_' + sample +'_' + gene.transcript + '_' +str(gene.start) + '_' +str(gene.end) + '_' +gene.chrom)
+            missing_gene_data_sample.append(gene.name + '_' + gene.transcript + '_' +str(gene.start) + '_' +str(gene.end) + '_' +gene.chrom + '_' + sample)
         ##report the genes in each amp
         if len(amps) > 0:    
             for amp in range(len(amps_df.index)):
                 amp_range= SequenceRange('place_holder', 'place_holder', int(amps_df['start'][amp]), int(amps_df['end'][amp]), str(amps_df['chr'][amp]))
                 if amp_range.overlaps(gene) and amp_range.chrom == gene.chrom:
-                    genes_in_amps[amp].append(gene.name + '_' + sample +'_' + gene.transcript + '_' +str(gene.start) + '_' +str(gene.end) + '_' +gene.chrom)
+                    genes_in_amps[amp].append(gene.name +'_' + gene.transcript + '_' +str(gene.start) + '_' +str(gene.end) + '_' +gene.chrom + '_' + sample)
     amps_df['genes_in_amps'] = genes_in_amps
         
     #print(sample)
@@ -101,7 +101,7 @@ except FileNotFoundError as e:
 if len(missing_gene_data_sample) >0:
     missing_data_samples_gene_df = pd.DataFrame(missing_gene_data_sample)
     #missing_data_samples_gene_df = missing_data_samples_mdm2_df.rename(columns={0: 'missing_mdm2_samples'})
-    missing_data_samples_gene_df[['gene', 'sample', 'transcript_ID', 'start', 'end', 'chr']] = missing_data_samples_gene_df[0].str.split('_', 1, expand=True)
+    missing_data_samples_gene_df[['gene', 'transcript_ID', 'start', 'end', 'chr', 'sample']] = missing_data_samples_gene_df[0].str.split('_', 5, expand=True)
     missing_data_samples_gene_df.drop(columns=[0])
 else:
     missing_data_samples_gene_df = pd.DataFrame(columns=[0])

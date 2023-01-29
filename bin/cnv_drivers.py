@@ -137,8 +137,7 @@ except FileNotFoundError as e:
 if len(missing_gene_data_sample) >0:
     missing_data_samples_gene_df = pd.DataFrame(missing_gene_data_sample)
     #missing_data_samples_gene_df = missing_data_samples_mdm2_df.rename(columns={0: 'missing_mdm2_samples'})
-    #missing_data_samples_gene_df[['gene', 'transcript_ID', 'start', 'end','chr', 'sample']] = missing_data_samples_gene_df[0].str.split('_', 5, expand=True)
-    missing_data_genes_next_to_amps_df[['gene', 'transcript_ID', 'start', 'end','chr', 'total_cn_contig_after_contig_before', 'sample']] = missing_data_genes_next_to_amps_df[0].str.split('_', 6, expand=True)
+    missing_data_samples_gene_df[['gene', 'transcript_ID', 'start', 'end','chr', 'sample']] = missing_data_samples_gene_df[0].str.split('_', 5, expand=True)
     missing_data_samples_gene_df.drop(columns=[0])
 else:
     missing_data_samples_gene_df = pd.DataFrame(columns=[0])
@@ -146,7 +145,8 @@ else:
 if len(missing_data_genes_next_to_amps) >0:
     missing_data_genes_next_to_amps_df = pd.DataFrame(missing_data_genes_next_to_amps)
     #missing_data_samples_gene_df = missing_data_samples_mdm2_df.rename(columns={0: 'missing_mdm2_samples'})
-    missing_data_genes_next_to_amps_df[['gene', 'transcript_ID', 'start', 'end','chr', 'sample']] = missing_data_genes_next_to_amps_df[0].str.split('_', 5, expand=True)
+    #missing_data_genes_next_to_amps_df[['gene', 'transcript_ID', 'start', 'end','chr', 'sample']] = missing_data_genes_next_to_amps_df[0].str.split('_', 5, expand=True)
+    missing_data_genes_next_to_amps_df[['gene', 'transcript_ID', 'start', 'end','chr', 'total_cn_contig_after_contig_before', 'sample']] = missing_data_genes_next_to_amps_df[0].str.split('_', 6, expand=True)
     missing_data_genes_next_to_amps_df.drop(columns=[0])
 else:
     missing_data_genes_next_to_amps_df = pd.DataFrame(columns=[0])

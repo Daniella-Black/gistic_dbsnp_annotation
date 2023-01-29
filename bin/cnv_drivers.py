@@ -82,7 +82,7 @@ try:
             if contig_range.overlaps(gene):
                 contig_overlapping_gene.append(id_list[contig])
         if len(contig_overlapping_gene)== 0:
-            missing_gene_data_sample.append(gene.name + '_' + gene.transcript + '_' +str(gene.start) + '_' +str(gene.end) '_' +gene.chrom + '_' + sample)
+            missing_gene_data_sample.append(gene.name + '_' + gene.transcript + '_' +str(gene.start) + '_' +str(gene.end) +'_' +gene.chrom + '_' + sample)
         ##report the genes in each amp
         if len(amps) > 0:    
             for amp in range(len(amps_df.index)):

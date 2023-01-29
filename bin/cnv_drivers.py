@@ -88,23 +88,28 @@ try:
             else:
                 if contig_range.start > gene.end:
                     distance_from_gene = gene.end - contig_range.start
-                    contig_id = contig_range.chrom + '_' +str(contig_range.start) + '_' +str(contig_range.end) + '_' + contig_range.total_cn + '_' + distance_from_gene + '_' +sample
+                    contig_id = contig_range.chrom + '_' +str(contig_range.start) + '_' +str(contig_range.end) + '_' + str(contig_range.total_cn) + '_' + str(distance_from_gene) + '_' +sample
                     contigs_after_gene.append(contig_id)
                 elif contig_range.end < gene.start:
                     distance_from_gene = gene.start - contig_range.end
-                    contig_id = contig_range.chrom + '_' +str(contig_range.start) + '_' +str(contig_range.end) + '_' + contig_range.total_cn+ '_'+ distance_from_gene +'_' +sample
+                    contig_id = contig_range.chrom + '_' +str(contig_range.start) + '_' +str(contig_range.end) + '_' + str(contig_range.total_cn)+ '_'+ str(distance_from_gene) +'_' +sample
                     contigs_before_gene.append(contig_id)
         if len(contig_overlapping_gene)== 0:
             missing_gene_data_sample.append(gene.name + '_' + gene.transcript + '_' +str(gene.start) + '_' +str(gene.end) +'_' +gene.chrom + '_' + sample)
             neighbour_amplified = 0
             contigs_after_gene_df = pd.DataFrame(contigs_after_gene)
             contigs_after_gene_df[[ 'chr', 'start', 'end','total_cn', 'distance_from_gene', 'sample']] = amps_df[0].str.split('_', 5, expand=True)
+            contigs_after_gene_df['total_cn'] = contigs_after_gene_df['total_cn'].astype('int') 
+            contigs_after_gene_df['distance_from_gene'] = contigs_after_gene_df['distance_from_gene'].astype('int') 
          
+        
             if contigs_after_gene_df['total_cn'][contigs_after_gene_df['distance_from_gene'].idxmax()] > amp_threshold:
                 neighbour_amplified = neighbour_amplified+1
             
             contigs_before_gene_df = pd.DataFrame(contigs_before_gene)
             contigs_before_gene_df[[ 'chr', 'start', 'end','total_cn', 'distance_from_gene', 'sample']] = amps_df[0].str.split('_', 5, expand=True)
+            contigs_before_gene_df['total_cn'] = contigs_before_gene_df['total_cn'].astype('int') 
+            contigs_before_gene_df['distance_from_gene'] = contigs_before_gene_df['distance_from_gene'].astype('int') 
             
             if contigs_before_gene_df['total_cn'][contigs_after_gene_df['distance_from_gene'].idxmin()] > amp_threshold:
                 neighbour_amplified = neighbour_amplified+1

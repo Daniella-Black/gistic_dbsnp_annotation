@@ -98,7 +98,7 @@ try:
             missing_gene_data_sample.append(gene.name + '_' + gene.transcript + '_' +str(gene.start) + '_' +str(gene.end) +'_' +gene.chrom + '_' + sample)
             neighbour_amplified = 0
             contigs_after_gene_df = pd.DataFrame(contigs_after_gene)
-            contigs_after_gene_df[[ 'chr', 'start', 'end','total_cn', 'distance_from_gene', 'sample']] = amps_df[0].str.split('_', 5, expand=True)
+            contigs_after_gene_df[[ 'chr', 'start', 'end','total_cn', 'distance_from_gene', 'sample']] = contigs_after_gene_df[0].str.split('_', 5, expand=True)
             contigs_after_gene_df['total_cn'] = contigs_after_gene_df['total_cn'].astype('int') 
             contigs_after_gene_df['distance_from_gene'] = contigs_after_gene_df['distance_from_gene'].astype('int') 
          
@@ -107,7 +107,7 @@ try:
                 neighbour_amplified = neighbour_amplified+1
             
             contigs_before_gene_df = pd.DataFrame(contigs_before_gene)
-            contigs_before_gene_df[[ 'chr', 'start', 'end','total_cn', 'distance_from_gene', 'sample']] = amps_df[0].str.split('_', 5, expand=True)
+            contigs_before_gene_df[[ 'chr', 'start', 'end','total_cn', 'distance_from_gene', 'sample']] = contigs_before_gene_df[0].str.split('_', 5, expand=True)
             contigs_before_gene_df['total_cn'] = contigs_before_gene_df['total_cn'].astype('int') 
             contigs_before_gene_df['distance_from_gene'] = contigs_before_gene_df['distance_from_gene'].astype('int') 
             

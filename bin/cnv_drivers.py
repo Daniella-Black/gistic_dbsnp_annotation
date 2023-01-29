@@ -96,7 +96,9 @@ try:
                     contigs_before_gene.append(contig_id)
         if len(contig_overlapping_gene)== 0:
             missing_gene_data_sample.append(gene.name + '_' + gene.transcript + '_' +str(gene.start) + '_' +str(gene.end) +'_' +gene.chrom + '_' + sample)
-            neighbour_amplified = 0
+            
+            ##if there are contigs after the missing gene. Find the closest one and see if it is amplified
+            total_cn_of_amp_neighbours = []
             contigs_after_gene_df = pd.DataFrame(contigs_after_gene)
             contigs_after_gene_df[[ 'chr', 'start', 'end','total_cn', 'distance_from_gene', 'sample']] = contigs_after_gene_df[0].str.split('_', 5, expand=True)
             contigs_after_gene_df['total_cn'] = contigs_after_gene_df['total_cn'].astype('int') 
@@ -104,18 +106,17 @@ try:
          
         
             if contigs_after_gene_df['total_cn'][contigs_after_gene_df['distance_from_gene'].idxmax()] > amp_threshold:
-                neighbour_amplified = neighbour_amplified+1
-            
+                total_cn_of_amp_neighbours.append(contigs_after_gene_df['total_cn'][contigs_after_gene_df['distance_from_gene'].idxmax()])
             contigs_before_gene_df = pd.DataFrame(contigs_before_gene)
             contigs_before_gene_df[[ 'chr', 'start', 'end','total_cn', 'distance_from_gene', 'sample']] = contigs_before_gene_df[0].str.split('_', 5, expand=True)
             contigs_before_gene_df['total_cn'] = contigs_before_gene_df['total_cn'].astype('int') 
             contigs_before_gene_df['distance_from_gene'] = contigs_before_gene_df['distance_from_gene'].astype('int') 
             
             if contigs_before_gene_df['total_cn'][contigs_before_gene_df['distance_from_gene'].idxmin()] > amp_threshold:
-                neighbour_amplified = neighbour_amplified+1
+                total_cn_of_amp_neighbours.append(contigs_before_gene_df['total_cn'][contigs_before_gene_df['distance_from_gene'].idxmin()])
             
-            if  neighbour_amplified > 0:
-                    missing_data_genes_next_to_amps.append(gene.name + '_' + gene.transcript + '_' +str(gene.start) + '_' +str(gene.end) +'_' +gene.chrom + '_' + sample)
+            if len(total_cn_of_amp_neighbours) > 0:
+                    missing_data_genes_next_to_amps.append(gene.name + '_' + gene.transcript + '_' +str(gene.start) + '_' +str(gene.end) +'_' +gene.chrom + '_' +str(total_cn_of_amp_neighbours) + '_' +sample)
                 
         ##report the genes in each amp
         if len(amps) > 0:    
@@ -136,7 +137,8 @@ except FileNotFoundError as e:
 if len(missing_gene_data_sample) >0:
     missing_data_samples_gene_df = pd.DataFrame(missing_gene_data_sample)
     #missing_data_samples_gene_df = missing_data_samples_mdm2_df.rename(columns={0: 'missing_mdm2_samples'})
-    missing_data_samples_gene_df[['gene', 'transcript_ID', 'start', 'end','chr', 'sample']] = missing_data_samples_gene_df[0].str.split('_', 5, expand=True)
+    #missing_data_samples_gene_df[['gene', 'transcript_ID', 'start', 'end','chr', 'sample']] = missing_data_samples_gene_df[0].str.split('_', 5, expand=True)
+    missing_data_genes_next_to_amps_df[['gene', 'transcript_ID', 'start', 'end','chr', 'total_cn_contig_after_contig_before', 'sample']] = missing_data_genes_next_to_amps_df[0].str.split('_', 6, expand=True)
     missing_data_samples_gene_df.drop(columns=[0])
 else:
     missing_data_samples_gene_df = pd.DataFrame(columns=[0])

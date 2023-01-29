@@ -111,7 +111,7 @@ try:
             contigs_before_gene_df['total_cn'] = contigs_before_gene_df['total_cn'].astype('int') 
             contigs_before_gene_df['distance_from_gene'] = contigs_before_gene_df['distance_from_gene'].astype('int') 
             
-            if contigs_before_gene_df['total_cn'][contigs_after_gene_df['distance_from_gene'].idxmin()] > amp_threshold:
+            if contigs_before_gene_df['total_cn'][contigs_before_gene_df['distance_from_gene'].idxmin()] > amp_threshold:
                 neighbour_amplified = neighbour_amplified+1
             
             if  neighbour_amplified > 0:
@@ -141,7 +141,7 @@ if len(missing_gene_data_sample) >0:
 else:
     missing_data_samples_gene_df = pd.DataFrame(columns=[0])
     
-if len(mmissing_data_genes_next_to_amps) >0:
+if len(missing_data_genes_next_to_amps) >0:
     missing_data_genes_next_to_amps_df = pd.DataFrame(missing_data_genes_next_to_amps)
     #missing_data_samples_gene_df = missing_data_samples_mdm2_df.rename(columns={0: 'missing_mdm2_samples'})
     missing_data_genes_next_to_amps_df[['gene', 'transcript_ID', 'start', 'end','chr', 'sample']] = missing_data_genes_next_to_amps_df[0].str.split('_', 5, expand=True)

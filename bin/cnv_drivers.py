@@ -5,6 +5,7 @@ from dataclasses import dataclass
 import argparse
 #from os.path import exists
 
+driver_type =='hom_del'
 @dataclass
 class SequenceRange:
     """Class for the start and end of a range."""
@@ -48,10 +49,13 @@ gene_df = pd.read_csv(gene_df_path)
 #gene_df=gene_df.dropna()
 
 #set threshold for amplifications
-if ploidy <2.5:
-    amp_threshold = 5
-elif ploidy >= 2.5:
-    amp_threshold = 9
+if driver_type == 'amp':
+    if ploidy <2.5:
+        amp_threshold = 5
+    elif ploidy >= 2.5:
+        amp_threshold = 9
+elif driver_type == 'hom_del':
+    amp_threshold = 0
 
     
 #file_exists = exists(cnv_path):
@@ -62,8 +66,12 @@ try:
     cnv['id'] = cnv['seqnames'].astype(str) + '_' + cnv['start'].astype(str) + '_' + cnv['end'].astype(str) + '_' + cnv['total_cn'].astype(str) +'_' + sample
     id_list = list(cnv['id'])
     for contig in range(len(total_cn)):
-        if total_cn[contig] >= amp_threshold: 
-            amps.append(id_list[contig]) 
+        if driver_type == 'amp':
+            if total_cn[contig] >= amp_threshold: 
+                amps.append(id_list[contig]) 
+        elif driver_type == 'hom_del':
+            if total_cn[contig] == amp_threshold: 
+                amps.append(id_list[contig])         
     #take the list of amps obtained in for loop above and convert to a table
     if len(amps) >0:
         amps_df = pd.DataFrame(amps)
@@ -104,9 +112,13 @@ try:
                 contigs_after_gene_df[[ 'chr', 'start', 'end','total_cn', 'distance_from_gene', 'sample']] = contigs_after_gene_df[0].str.split('_', 5, expand=True)
                 contigs_after_gene_df['total_cn'] = contigs_after_gene_df['total_cn'].astype('int') 
                 contigs_after_gene_df['distance_from_gene'] = contigs_after_gene_df['distance_from_gene'].astype('int') 
-
-                if contigs_after_gene_df['total_cn'][contigs_after_gene_df['distance_from_gene'].idxmax()] > amp_threshold:
-                    total_cn_of_amp_neighbours.append(contigs_after_gene_df['total_cn'][contigs_after_gene_df['distance_from_gene'].idxmax()])
+                
+                if driver_type == 'amp':
+                    if contigs_after_gene_df['total_cn'][contigs_after_gene_df['distance_from_gene'].idxmax()] > amp_threshold:
+                        total_cn_of_amp_neighbours.append(contigs_after_gene_df['total_cn'][contigs_after_gene_df['distance_from_gene'].idxmax()])
+                elif driver_type == 'hom_del':   
+                    if contigs_after_gene_df['total_cn'][contigs_after_gene_df['distance_from_gene'].idxmax()] == amp_threshold:
+                        total_cn_of_amp_neighbours.append(contigs_after_gene_df['total_cn'][contigs_after_gene_df['distance_from_gene'].idxmax()])
             
             if len(contigs_before_gene) >0:    
                 contigs_before_gene_df = pd.DataFrame(contigs_before_gene)
@@ -114,8 +126,12 @@ try:
                 contigs_before_gene_df['total_cn'] = contigs_before_gene_df['total_cn'].astype('int') 
                 contigs_before_gene_df['distance_from_gene'] = contigs_before_gene_df['distance_from_gene'].astype('int') 
 
-                if contigs_before_gene_df['total_cn'][contigs_before_gene_df['distance_from_gene'].idxmin()] > amp_threshold:
-                    total_cn_of_amp_neighbours.append(contigs_before_gene_df['total_cn'][contigs_before_gene_df['distance_from_gene'].idxmin()])
+                if driver_type == 'amp':
+                    if contigs_before_gene_df['total_cn'][contigs_before_gene_df['distance_from_gene'].idxmin()] > amp_threshold:
+                        total_cn_of_amp_neighbours.append(contigs_before_gene_df['total_cn'][contigs_before_gene_df['distance_from_gene'].idxmin()])
+                elif driver_type == 'hom_del':
+                     if contigs_before_gene_df['total_cn'][contigs_before_gene_df['distance_from_gene'].idxmin()] == amp_threshold:
+                        total_cn_of_amp_neighbours.append(contigs_before_gene_df['total_cn'][contigs_before_gene_df['distance_from_gene'].idxmin()])
 
                 if len(total_cn_of_amp_neighbours) > 0:
                         missing_data_genes_next_to_amps.append(gene.name + '_' + gene.transcript + '_' +str(gene.start) + '_' +str(gene.end) +'_' +gene.chrom + '_' +str(total_cn_of_amp_neighbours) + '_' +sample)
@@ -157,7 +173,7 @@ else:
 missing_data_samples_gene_df.to_csv(sample + '_genes_with_missing_data.csv')
 
 #output table of genes with missing data next to amps                                                                                          
-missing_data_genes_next_to_amps_df.to_csv(sample + '_genes_with_missing_data_next_to_amps.csv')
+missing_data_genes_next_to_amps_df.to_csv(sample + '_genes_with_missing_data_next_to_hom_dels.csv')
 
 #output amps_df
-amps_df.to_csv(sample + '_amplifications.csv')
+amps_df.to_csv(sample + '_hom_dels.csv')

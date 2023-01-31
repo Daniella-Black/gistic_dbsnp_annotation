@@ -5,7 +5,7 @@ from dataclasses import dataclass
 import argparse
 #from os.path import exists
 
-driver_type =='hom_del'
+driver_type ='hom_del'
 @dataclass
 class SequenceRange:
     """Class for the start and end of a range."""

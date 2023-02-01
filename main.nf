@@ -24,7 +24,7 @@ process  CloudOS_MTR_input{
     file "*_mtr_format_cnv_missing.txt"
     file "*_genes_with_missing_data.csv"
     file "*_hom_dels.csv"
-    file "*_genes_with_missing_data_next_to_amps.csv"
+    file "*_genes_with_missing_data_next_to_hom_dels.csv"
  
     script:
     """

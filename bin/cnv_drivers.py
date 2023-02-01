@@ -54,7 +54,7 @@ if driver_type == 'amp':
         amp_threshold = 5
     elif ploidy >= 2.5:
         amp_threshold = 9
-elif driver_type == 'hom_del':
+if driver_type == 'hom_del':
     amp_threshold = 0
 
     
@@ -69,7 +69,7 @@ try:
         if driver_type == 'amp':
             if total_cn[contig] >= amp_threshold: 
                 amps.append(id_list[contig]) 
-        elif driver_type == 'hom_del':
+        if driver_type == 'hom_del':
             if total_cn[contig] == amp_threshold: 
                 amps.append(id_list[contig])         
     #take the list of amps obtained in for loop above and convert to a table
@@ -116,7 +116,7 @@ try:
                 if driver_type == 'amp':
                     if contigs_after_gene_df['total_cn'][contigs_after_gene_df['distance_from_gene'].idxmax()] > amp_threshold:
                         total_cn_of_amp_neighbours.append(contigs_after_gene_df['total_cn'][contigs_after_gene_df['distance_from_gene'].idxmax()])
-                elif driver_type == 'hom_del':   
+                if driver_type == 'hom_del':   
                     if contigs_after_gene_df['total_cn'][contigs_after_gene_df['distance_from_gene'].idxmax()] == amp_threshold:
                         total_cn_of_amp_neighbours.append(contigs_after_gene_df['total_cn'][contigs_after_gene_df['distance_from_gene'].idxmax()])
             
@@ -129,7 +129,7 @@ try:
                 if driver_type == 'amp':
                     if contigs_before_gene_df['total_cn'][contigs_before_gene_df['distance_from_gene'].idxmin()] > amp_threshold:
                         total_cn_of_amp_neighbours.append(contigs_before_gene_df['total_cn'][contigs_before_gene_df['distance_from_gene'].idxmin()])
-                elif driver_type == 'hom_del':
+                if driver_type == 'hom_del':
                      if contigs_before_gene_df['total_cn'][contigs_before_gene_df['distance_from_gene'].idxmin()] == amp_threshold:
                         total_cn_of_amp_neighbours.append(contigs_before_gene_df['total_cn'][contigs_before_gene_df['distance_from_gene'].idxmin()])
 

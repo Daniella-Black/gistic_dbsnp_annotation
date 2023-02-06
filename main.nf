@@ -13,6 +13,7 @@ process  CloudOS_MTR_input{
     container = 'dockeraccountdani/pydocker:latest' 
     tag"$tumour_sample_platekey"
     publishDir "${params.outdir}/$tumour_sample_platekey", mode: 'copy'
+    submitRateLimit = '300/1min'
     maxForks params.maxforks
     errorStrategy 'retry'
     maxRetries 3

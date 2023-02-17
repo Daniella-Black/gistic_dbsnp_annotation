@@ -5,7 +5,7 @@ from dataclasses import dataclass
 import argparse
 #from os.path import exists
 
-driver_type ='amp'
+driver_type ='hom_del'
 @dataclass
 class SequenceRange:
     """Class for the start and end of a range."""
@@ -62,6 +62,8 @@ if driver_type == 'hom_del':
 try:    
     cnv = pd.read_csv(cnv_path, '\t')
     cnv['total_cn'] = cnv['major_cn'] + cnv['minor_cn']
+    cnv['width'] = cnv['end'] - cnv['start']
+    width = list(cnv['width'])
     total_cn = list(cnv['total_cn'])
     cnv['id'] = cnv['seqnames'].astype(str) + '_' + cnv['start'].astype(str) + '_' + cnv['end'].astype(str) + '_' + cnv['total_cn'].astype(str) +'_' + sample
     id_list = list(cnv['id'])
@@ -70,8 +72,9 @@ try:
             if total_cn[contig] >= amp_threshold: 
                 amps.append(id_list[contig]) 
         if driver_type == 'hom_del':
-            if total_cn[contig] == amp_threshold: 
-                amps.append(id_list[contig])         
+            if width[contig] < 3000000:
+                if total_cn[contig] == amp_threshold: 
+                    amps.append(id_list[contig])         
     #take the list of amps obtained in for loop above and convert to a table
     if len(amps) >0:
         amps_df = pd.DataFrame(amps)

@@ -44,7 +44,7 @@ cnv = pd.read_csv(ploidy, header=None,nrows=10,sep='\t')
 cnv[['name', 'value']] = cnv[0].str.split('=', expand=True)
 cnv = cnv[cnv['name'] == '##OverallPloidy']
 cnv = cnv.reset_index(drop=True)
-ploidy= int(cnv['value'][0])
+ploidy= float(cnv['value'][0])
     
 amps = list()
 missing_gene_data_sample= list()

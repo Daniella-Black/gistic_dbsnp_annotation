@@ -23,7 +23,7 @@ my_parser.add_argument('-sample',
                        type=str,
                        help='sample')
 my_parser.add_argument('-ploidy',
-                       type=float,
+                       type=str,
                        help='ploidy')
 my_parser.add_argument('-gene_df',
                        type=str,
@@ -39,6 +39,12 @@ ploidy = args.ploidy
 gene_df_path = args.gene_df
 cnv_path = args.somatic_cnv_vcf
     
+###get ploidy value from somatic.VNC.vcf.gz
+cnv = pd.read_csv(ploidy, header=None,nrows=10,sep='\t')
+cnv[['name', 'value']] = cnv[0].str.split('=', expand=True)
+cnv = cnv[cnv['name'] == '#OverallPloidy']
+cnv = cnv.reset_index(drop=True)
+ploidy= int(cnv['value'][0])
     
 amps = list()
 missing_gene_data_sample= list()

@@ -10,12 +10,10 @@ Channel
 
 //run the script to make MTR input on above file paths
 process  CloudOS_MTR_input{
+    errorStrategy 'ignore'
     container = 'public.ecr.aws/b0q1v7i3/pydocker:latest' 
     tag"$tumour_sample_platekey"
     publishDir "${params.outdir}/$tumour_sample_platekey", mode: 'copy'
-    maxForks 900
-    errorStrategy 'retry'
-    maxRetries 3
     
     input:
     set val(tumour_sample_platekey), file(somatic_cnv_vcf), file(ploidy), file(gene_df) from ch_input

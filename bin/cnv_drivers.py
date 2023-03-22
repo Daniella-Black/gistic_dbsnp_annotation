@@ -74,7 +74,8 @@ try:
         if driver_type == 'hom_del':
             #if width[contig] < 21500000:
             #if width[contig] < 3000000 and width[contig] > 600000:
-            if width[contig] < 1500000:
+            #if width[contig] < 1500000:
+            if width[contig] < 1000000:
                 if total_cn[contig] == amp_threshold: 
                     amps.append(id_list[contig])         
     #take the list of amps obtained in for loop above and convert to a table

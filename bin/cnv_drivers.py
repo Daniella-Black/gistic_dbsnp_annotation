@@ -1,5 +1,4 @@
 #!/usr/local/bin/python3
-
 import pandas as pd
 from dataclasses import dataclass
 import argparse

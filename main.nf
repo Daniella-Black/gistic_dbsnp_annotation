@@ -27,6 +27,6 @@ process  CloudOS_MTR_input{
  
     script:
     """
-    cnv_drivers.py -sample '$tumour_sample_platekey' -somatic_cnv_vcf '$somatic_cnv_vcf' -ploidy '$ploidy' -gene_df '$gene_df'-organ '$organ'
+    cnv_drivers.py -sample '$tumour_sample_platekey' -somatic_cnv_vcf '$somatic_cnv_vcf' -ploidy '$ploidy' -gene_df '$gene_df' -organ '$organ'
     """ 
 }

@@ -189,4 +189,4 @@ missing_data_samples_gene_df.to_csv(sample + '_' +organ +'_genes_with_missing_da
 missing_data_genes_next_to_amps_df.to_csv(sample +'_' +organ + '_genes_with_missing_data_next_to_hom_dels.csv')
 
 #output amps_df
-amps_df.to_csv(sample + '_' +organ + '_amplifications.csv')
+amps_df.to_csv(sample + '_' +organ + '_hom_dels.csv')

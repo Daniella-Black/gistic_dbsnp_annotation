@@ -33,10 +33,14 @@ my_parser.add_argument('-gene_df',
 my_parser.add_argument('-somatic_cnv_vcf',
                        type=str,
                        help='path to the mtr input cnv of the sample')
+my_parser.add_argument('-organ',
+                       type=str,
+                       help='organ')
 ####data input
 
 args = my_parser.parse_args()
 sample = args.sample
+organ = args.organ
 ploidy = args.ploidy
 gene_df_path = args.gene_df
 cnv_path = args.somatic_cnv_vcf
@@ -78,6 +82,7 @@ try:
             #if width[contig] < 1000000:
             #if width[contig] < 1500000 and width[contig] > 600000:
             #if width[contig] > 200000:
+            if width[contig] < 1500000:
             if total_cn[contig] == amp_threshold: 
                 amps.append(id_list[contig])         
     #take the list of amps obtained in for loop above and convert to a table
@@ -154,10 +159,10 @@ try:
     amps_df['genes_in_amps'] = genes_in_amps
         
     #print(sample)
-    with open(sample + '_mtr_format_cnv_missing.txt', 'w') as f:
+    with open(sample +  '_' +organ + '_mtr_format_cnv_missing.txt', 'w') as f:
         f.write(sample+' complete')
 except FileNotFoundError as e:
-    with open(sample + '_mtr_format_cnv_missing.txt', 'w') as f:
+    with open(sample + '_' +organ + '_mtr_format_cnv_missing.txt', 'w') as f:
         f.write(sample+' no mtr format cnv file')
         
 if len(missing_gene_data_sample) >0:
@@ -178,10 +183,10 @@ else:
     missing_data_genes_next_to_amps_df = pd.DataFrame(columns=[0])
 
 #output table of genes with missing data                                                                                                 
-missing_data_samples_gene_df.to_csv(sample + '_genes_with_missing_data.csv')
+missing_data_samples_gene_df.to_csv(sample + '_' +organ +'_genes_with_missing_data.csv')
 
 #output table of genes with missing data next to amps                                                                                          
-missing_data_genes_next_to_amps_df.to_csv(sample + '_genes_with_missing_data_next_to_hom_dels.csv')
+missing_data_genes_next_to_amps_df.to_csv(sample +'_' +organ + '_genes_with_missing_data_next_to_hom_dels.csv')
 
 #output amps_df
-amps_df.to_csv(sample + '_hom_dels.csv')
+amps_df.to_csv(sample + '_' +organ + '_amplifications.csv')

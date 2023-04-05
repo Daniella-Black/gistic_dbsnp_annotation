@@ -83,8 +83,8 @@ try:
             #if width[contig] < 1500000 and width[contig] > 600000:
             #if width[contig] > 200000:
             if width[contig] < 1500000:
-            if total_cn[contig] == amp_threshold: 
-                amps.append(id_list[contig])         
+                if total_cn[contig] == amp_threshold: 
+                    amps.append(id_list[contig])         
     #take the list of amps obtained in for loop above and convert to a table
     if len(amps) >0:
         amps_df = pd.DataFrame(amps)

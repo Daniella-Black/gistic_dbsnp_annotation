@@ -103,7 +103,7 @@ try:
         contigs_after_gene = list()
         contigs_before_gene = list()
         for contig in range(len(list(cnv_chr['total_cn']))):
-            contig_range= SequenceRange('place_holder', 'place_holder', int(cnv_chr['start'][contig]), int(cnv_chr['end'][contig]), str(cnv_chr['seqnames'][contig]), cnv_chr['total_cn'][contig])
+            contig_range= SequenceRange('place_holder', 'place_holder', int(math.floor(float(cnv_chr['start'][contig]))), int(math.floor(float(cnv_chr['end'][contig]))), str(cnv_chr['seqnames'][contig]), cnv_chr['total_cn'][contig])
             if contig_range.overlaps(gene):
                 contig_overlapping_gene.append(id_list[contig])
             else:
@@ -152,7 +152,7 @@ try:
         ##report the genes in each amp
         if len(amps) > 0:    
             for amp in range(len(amps_df.index)):
-                amp_range= SequenceRange('place_holder', 'place_holder', int(amps_df['start'][amp]), int(amps_df['end'][amp]), str(amps_df['chr'][amp]), amps_df['total_cn'][amp])
+                amp_range= SequenceRange('place_holder', 'place_holder', int(math.floor(float(amps_df['start'][amp]))), int(math.floor(float(amps_df['end'][amp]))), str(amps_df['chr'][amp]), amps_df['total_cn'][amp])
                 if amp_range.overlaps(gene) and amp_range.chrom == gene.chrom:
                     genes_in_amps[amp].append(gene.name +'_' + gene.transcript + '_' +str(gene.start) + '_' +str(gene.end) + '_' +gene.chrom + '_' + sample)
                     #genes_in_amps[amp].append(gene.name)

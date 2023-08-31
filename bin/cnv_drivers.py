@@ -22,7 +22,7 @@ my_parser.add_argument('-sample',
                        type=str,
                        help='sample')
 my_parser.add_argument('-ploidy',
-                       type=float,
+                       type=str,
                        help='ploidy')
 my_parser.add_argument('-gene_df',
                        type=str,
@@ -47,6 +47,12 @@ amps = list()
 missing_gene_data_sample= list()
 gene_df = pd.read_csv(gene_df_path) 
 #gene_df=gene_df.dropna()
+
+for_ploidy = pd.read_csv(ploidy, header=None,sep='\n')
+for_ploidy = for_ploidy[for_ploidy[0].str.contains('##OverallPloidy')]
+for_ploidy[['name', 'value']] = for_ploidy[0].str.split('=', expand=True)
+for_ploidy = for_ploidy.reset_index(drop=True)
+ploidy= float(for_ploidy['value'][0])
 
 #set threshold for amplifications
 if ploidy <2.5:

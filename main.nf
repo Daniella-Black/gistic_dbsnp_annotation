@@ -4,7 +4,7 @@ Channel
     .fromPath(params.inputlist)
     .ifEmpty {exit 1, "Cannot find input file : ${params.inputlist}"}
     .splitCsv(skip:1)
-    .map{tumour_sample_platekey,ploidy, organ,somatic_cnv_vcf, gene_df -> [tumour_sample_platekey,ploidy,organ, file(somatic_cnv_vcf),  file(gene_df)]}
+    .map{tumour_sample_platekey,ploidy, organ,somatic_cnv_vcf, gene_df -> [tumour_sample_platekey,file(ploidy),organ, file(somatic_cnv_vcf),  file(gene_df)]}
     .set{ ch_input }
 
 
@@ -15,7 +15,7 @@ process  CloudOS_MTR_input{
     errorStrategy 'ignore'
     
     input:
-    set val(tumour_sample_platekey),val(ploidy), val(organ), file(somatic_cnv_vcf),  file(gene_df) from ch_input
+    set val(tumour_sample_platekey),file(ploidy), val(organ), file(somatic_cnv_vcf),  file(gene_df) from ch_input
 
     output:
     file "*_mtr_format_cnv_missing.txt"

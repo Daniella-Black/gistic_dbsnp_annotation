@@ -12,7 +12,7 @@ Channel
 process  CloudOS_MTR_input{
     tag"$tumour_sample_platekey"
     publishDir "${params.outdir}/$tumour_sample_platekey", mode: 'copy'
-    errorStrategy 'ignore'
+    //errorStrategy 'ignore'
     
     input:
     set val(tumour_sample_platekey),file(ploidy), val(organ), file(somatic_cnv_vcf),  file(gene_df) from ch_input

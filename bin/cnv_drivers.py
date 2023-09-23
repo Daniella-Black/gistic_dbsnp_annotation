@@ -1,164 +1,136 @@
 #!/usr/local/bin/python3
 
 import pandas as pd
-from dataclasses import dataclass
-import argparse
-import math
-#from os.path import exists
-
-@dataclass
-class SequenceRange:
-    """Class for the start and end of a range."""
-    name: str
-    transcript: str
-    start: int
-    end: int
-    chrom: str
-    total_cn: int
-    def overlaps(self, other: "SequenceRange") -> bool:
-        if self.chrom != other.chrom:
-            return False
-        return (other.start <= self.start <= other.end) or (other.start <= self.end <= other.end) or (self.start <= other.start <= self.end) or (self.start <= other.end <= self.end)
+import os
 
 my_parser = argparse.ArgumentParser(description='find the missing data in cnv files')
 my_parser.add_argument('-sample',
                        type=str,
                        help='sample')
-my_parser.add_argument('-ploidy',
+my_parser.add_argument('-pre_dbsnp_file',
                        type=float,
-                       help='ploidy')
-my_parser.add_argument('-gene_df',
+                       help='the pre-dbsnp annotated input')
+my_parser.add_argument('-chr_1',
                        type=str,
-                       help='path to the df of genes and cooridnates of canonical transcript')
-my_parser.add_argument('-somatic_cnv_vcf',
+                       help='dbsnp per chromosome')
+my_parser.add_argument('-chr_2',
                        type=str,
-                       help='path to the mtr input cnv of the sample')
-####data input
+                       help='dbsnp per chromosome')
+my_parser.add_argument('-chr_3',
+                       type=str,
+                       help='dbsnp per chromosome')
+my_parser.add_argument('-chr_4',
+                       type=str,
+                       help='dbsnp per chromosome')
+my_parser.add_argument('-chr_5',
+                       type=str,
+                       help='dbsnp per chromosome')
+my_parser.add_argument('-chr_6',
+                       type=str,
+                       help='dbsnp per chromosome')
+my_parser.add_argument('-chr_7',
+                       type=str,
+                       help='dbsnp per chromosome')
+my_parser.add_argument('-chr_8',
+                       type=str,
+                       help='dbsnp per chromosome')
+my_parser.add_argument('-chr_9',
+                       type=str,
+                       help='dbsnp per chromosome')
+my_parser.add_argument('-chr_10',
+                       type=str,
+                       help='dbsnp per chromosome')
+my_parser.add_argument('-chr_11',
+                       type=str,
+                       help='dbsnp per chromosome')
+my_parser.add_argument('-chr_12',
+                       type=str,
+                       help='dbsnp per chromosome')
+my_parser.add_argument('-chr_13',
+                       type=str,
+                       help='dbsnp per chromosome')
+my_parser.add_argument('-chr_14',
+                       type=str,
+                       help='dbsnp per chromosome')
+my_parser.add_argument('-chr_15',
+                       type=str,
+                       help='dbsnp per chromosome')
+my_parser.add_argument('-chr_16',
+                       type=str,
+                       help='dbsnp per chromosome')
+my_parser.add_argument('-chr_17',
+                       type=str,
+                       help='dbsnp per chromosome')
+my_parser.add_argument('-chr_18',
+                       type=str,
+                       help='dbsnp per chromosome')
+my_parser.add_argument('-chr_19',
+                       type=str,
+                       help='dbsnp per chromosome')
+my_parser.add_argument('-chr_20',
+                       type=str,
+                       help='dbsnp per chromosome')
+my_parser.add_argument('-chr_21',
+                       type=str,
+                       help='dbsnp per chromosome')
+my_parser.add_argument('-chr_22',
+                       type=str,
+                       help='dbsnp per chromosome')
+my_parser.add_argument('-chr_X',
+                       type=str,
+                       help='dbsnp per chromosome')
 
 args = my_parser.parse_args()
 sample = args.sample
-ploidy = args.ploidy
-gene_df_path = args.gene_df
-cnv_path = args.somatic_cnv_vcf
+gistc_input = args.pre_dbsnp_file
+chr_1 = args.chr_1
+chr_2 = args.chr_2
+chr_3 = args.chr_3
+chr_4 = args.chr_4
+chr_5 = args.chr_5
+chr_6 = args.chr_6
+chr_7 = args.chr_7
+chr_8 = args.chr_8
+chr_9 = args.chr_9
+chr_10 = args.chr_10
+chr_11 = args.chr_11
+chr_12 = args.chr_12
+chr_13 = args.chr_13
+chr_14 = args.chr_14
+chr_15 = args.chr_15
+chr_16 = args.chr_16
+chr_17 = args.chr_17
+chr_18 = args.chr_18
+chr_19 = args.chr_19
+chr_20 = args.chr_20
+chr_21 = args.chr_21
+chr_22 = args.chr_22
+chr_X = args.chr_X
+
+#read in all the per chromosome dbsnps and put the pos of variants into a list
+
+##define the funciton which will get the lists and with the for loop below put them into the snps dictionary
+def snp_dict(chr_tab):
+    dbsnp_chrom = pd.read_csv(chr_tab,sep='\t',header=None)
+    return list(dbsnp_chrom[1])
+
+chr_dict = {'1':chr_1,'2': chr_2, '3': chr_3, '4':chr_4, '5':chr_5, '6':chr_6,'7':chr_7, '8':chr_8, '9':chr_9, '10': chr_10,'11':chr_11, '12': chr_12, '13':chr_13, '14':chr_14, '15':chr_15, '16': chr_16, '17':chr_17, '18':chr_18,'19':chr_19, '20':chr_20, '21':chr_21, '22':chr_22, 'X':chr_X}
+snps = {}
+for key in chr_dict.keys():
+    snps[key] = snp_dict(chr_dict[key])
     
+
+##annotate the existing gistic inpput file with the number of dbsnp common snps occur in each segment
+gistc_input.index = gistc_input.reset_index(drop=True)
+num_markers = list()
+for row in range(len(gistc_input.index)):
+    min = gistc_input[2][row]
+    max = gistc_input[3][row]
+    chr = gistc_input[1][row]
+    tmp = snps[chr]
+    num_markers.append(len(set([i for i in tmp if (i >= min) and (i <= max)])))
     
-amps = list()
-missing_gene_data_sample= list()
-missing_data_genes_next_to_amps = list()
-gene_df = pd.read_csv(gene_df_path) 
-#gene_df=gene_df.dropna()
+gistc_input['Num Markers'] = num_markers    
 
-#set threshold for amplifications
-if ploidy <2.5:
-    amp_threshold = 5
-elif ploidy >= 2.5:
-    amp_threshold = 9
-
-    
-#file_exists = exists(cnv_path):
-try:    
-    cnv = pd.read_csv(cnv_path, '\t')
-    cnv['total_cn'] = cnv['major_cn'] + cnv['minor_cn']
-    total_cn = list(cnv['total_cn'])
-    cnv['id'] = cnv['seqnames'].astype(str) + '_' + cnv['start'].astype(str) + '_' + cnv['end'].astype(str) + '_' + cnv['total_cn'].astype(str) +'_' + sample
-    id_list = list(cnv['id'])
-    for contig in range(len(total_cn)):
-        if total_cn[contig] >= amp_threshold: 
-            amps.append(id_list[contig]) 
-    #take the list of amps obtained in for loop above and convert to a table
-    if len(amps) >0:
-        amps_df = pd.DataFrame(amps)
-        amps_df[[ 'chr', 'start', 'end','total_cn', 'sample']] = amps_df[0].str.split('_', 4, expand=True)
-        amps_df.drop(columns=[0])
-    else:
-        amps_df = pd.DataFrame(columns=[0])
-    ##for each contig (no matter if it is amplified) report whether any contig overlaps with gene of interest - this is to identify samples with no data for the gene of interest for i in range(len(gene_df.index)): ##need file with all coding gene name chromosome coordinates #for gene in gene_df:
-    genes_in_amps = [[] for _ in range(len(amps_df.index))]
-    for i in range(len(gene_df.index)):  
-        gene  = SequenceRange(gene_df['gene_name'][i], gene_df['transcript_ID'][i], gene_df['start'][i], gene_df['end'][i], gene_df['chr'][i], 'total_cn_placeholder')
-        ##find the genes with missing data
-        contig_overlapping_gene = list()
-        cnv_chr = cnv.loc[cnv['seqnames'].astype('str') == gene.chrom]
-        cnv_chr.index = pd.RangeIndex(len(cnv_chr.index))
-        contigs_after_gene = list()
-        contigs_before_gene = list()
-        for contig in range(len(list(cnv_chr['total_cn']))):
-            contig_range= SequenceRange('place_holder', 'place_holder', int(cnv_chr['start'][contig]), int(cnv_chr['end'][contig]), str(cnv_chr['seqnames'][contig]), cnv_chr['total_cn'][contig])
-            if contig_range.overlaps(gene):
-                contig_overlapping_gene.append(id_list[contig])
-            else:
-                if contig_range.start > gene.end:
-                    distance_from_gene = gene.end - contig_range.start
-                    contig_id = contig_range.chrom + '_' +str(contig_range.start) + '_' +str(contig_range.end) + '_' + str(contig_range.total_cn) + '_' + str(distance_from_gene) + '_' +sample
-                    contigs_after_gene.append(contig_id)
-                elif contig_range.end < gene.start:
-                    distance_from_gene = gene.start - contig_range.end
-                    contig_id = contig_range.chrom + '_' +str(contig_range.start) + '_' +str(contig_range.end) + '_' + str(contig_range.total_cn)+ '_'+ str(distance_from_gene) +'_' +sample
-                    contigs_before_gene.append(contig_id)
-        if len(contig_overlapping_gene)== 0:
-            missing_gene_data_sample.append(gene.name + '_' + gene.transcript + '_' +str(gene.start) + '_' +str(gene.end) +'_' +gene.chrom + '_' + sample)
-            
-            ##if there are contigs after the missing gene. Find the closest one and see if it is amplified
-            total_cn_of_amp_neighbours = []
-            if len(contigs_after_gene) >0:
-                contigs_after_gene_df = pd.DataFrame(contigs_after_gene)
-                contigs_after_gene_df[[ 'chr', 'start', 'end','total_cn', 'distance_from_gene', 'sample']] = contigs_after_gene_df[0].str.split('_', 5, expand=True)
-                contigs_after_gene_df['total_cn'] = contigs_after_gene_df['total_cn'].astype('int') 
-                contigs_after_gene_df['distance_from_gene'] = contigs_after_gene_df['distance_from_gene'].astype('int') 
-
-                if contigs_after_gene_df['total_cn'][contigs_after_gene_df['distance_from_gene'].idxmax()] > amp_threshold:
-                    total_cn_of_amp_neighbours.append(contigs_after_gene_df['total_cn'][contigs_after_gene_df['distance_from_gene'].idxmax()])
-            
-            if len(contigs_before_gene) >0:    
-                contigs_before_gene_df = pd.DataFrame(contigs_before_gene)
-                contigs_before_gene_df[[ 'chr', 'start', 'end','total_cn', 'distance_from_gene', 'sample']] = contigs_before_gene_df[0].str.split('_', 5, expand=True)
-                contigs_before_gene_df['total_cn'] = contigs_before_gene_df['total_cn'].astype('int') 
-                contigs_before_gene_df['distance_from_gene'] = contigs_before_gene_df['distance_from_gene'].astype('int') 
-
-                if contigs_before_gene_df['total_cn'][contigs_before_gene_df['distance_from_gene'].idxmin()] > amp_threshold:
-                    total_cn_of_amp_neighbours.append(contigs_before_gene_df['total_cn'][contigs_before_gene_df['distance_from_gene'].idxmin()])
-
-                if len(total_cn_of_amp_neighbours) > 0:
-                        missing_data_genes_next_to_amps.append(gene.name + '_' + gene.transcript + '_' +str(gene.start) + '_' +str(gene.end) +'_' +gene.chrom + '_' +str(total_cn_of_amp_neighbours) + '_' +sample)
-
-        ##report the genes in each amp
-        if len(amps) > 0:    
-            for amp in range(len(amps_df.index)):
-                amp_range= SequenceRange('place_holder', 'place_holder', int(amps_df['start'][amp]), int(amps_df['end'][amp]), str(amps_df['chr'][amp]), amps_df['total_cn'][amp])
-                if amp_range.overlaps(gene) and amp_range.chrom == gene.chrom:
-                    genes_in_amps[amp].append(gene.name +'_' + gene.transcript + '_' +str(gene.start) + '_' +str(gene.end) + '_' +gene.chrom + '_' + sample)
-                    #genes_in_amps[amp].append(gene.name)
-    amps_df['genes_in_amps'] = genes_in_amps
-        
-    #print(sample)
-    with open(sample + '_mtr_format_cnv_missing.txt', 'w') as f:
-        f.write(sample+' complete')
-except FileNotFoundError as e:
-    with open(sample + '_mtr_format_cnv_missing.txt', 'w') as f:
-        f.write(sample+' no mtr format cnv file')
-        
-if len(missing_gene_data_sample) >0:
-    missing_data_samples_gene_df = pd.DataFrame(missing_gene_data_sample)
-    #missing_data_samples_gene_df = missing_data_samples_mdm2_df.rename(columns={0: 'missing_mdm2_samples'})
-    missing_data_samples_gene_df[['gene', 'transcript_ID', 'start', 'end','chr', 'sample']] = missing_data_samples_gene_df[0].str.split('_', 5, expand=True)
-    missing_data_samples_gene_df.drop(columns=[0])
-else:
-    missing_data_samples_gene_df = pd.DataFrame(columns=[0])
-    
-if len(missing_data_genes_next_to_amps) >0:
-    missing_data_genes_next_to_amps_df = pd.DataFrame(missing_data_genes_next_to_amps)
-    #missing_data_samples_gene_df = missing_data_samples_mdm2_df.rename(columns={0: 'missing_mdm2_samples'})
-    #missing_data_genes_next_to_amps_df[['gene', 'transcript_ID', 'start', 'end','chr', 'sample']] = missing_data_genes_next_to_amps_df[0].str.split('_', 5, expand=True)
-    missing_data_genes_next_to_amps_df[['gene', 'transcript_ID', 'start', 'end','chr', 'total_cn_contig_after_contig_before', 'sample']] = missing_data_genes_next_to_amps_df[0].str.split('_', 6, expand=True)
-    missing_data_genes_next_to_amps_df.drop(columns=[0])
-else:
-    missing_data_genes_next_to_amps_df = pd.DataFrame(columns=[0])
-
-#output table of genes with missing data                                                                                                 
-missing_data_samples_gene_df.to_csv(sample + '_genes_with_missing_data.csv')
-
-#output table of genes with missing data next to amps                                                                                          
-missing_data_genes_next_to_amps_df.to_csv(sample + '_genes_with_missing_data_next_to_amps.csv')
-
-#output amps_df
-amps_df.to_csv(sample + '_amplifications.csv')
+#output
+gistc_input.to_csv(sample + '_gistic_input.txt')

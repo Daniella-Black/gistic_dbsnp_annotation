@@ -9,7 +9,7 @@ my_parser.add_argument('-sample',
                        type=str,
                        help='sample')
 my_parser.add_argument('-pre_dbsnp_file',
-                       type=float,
+                       type=str,
                        help='the pre-dbsnp annotated input')
 my_parser.add_argument('-chr_1',
                        type=str,

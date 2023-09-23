@@ -24,6 +24,6 @@ process  CloudOS_MTR_input{
  
     script:
     """
-    dbsnp_annotate.py -sample '$sample' -pre_dbsnp_file '$pre_dbsnp_file' -chr_1 '$chr_1' -chr_2 '$chr_2' -chr_3 '$chr_3' -chr_4 '$chr_4$ -chr_5 '$chr_5' -chr_6 '$chr_6' -chr_7 '$chr_7' -chr_8 '$chr_8' -chr_9 '$chr_9' -chr_10 '$chr_10' -chr_11 '$chr_11' -chr_12 '$chr_12' -chr_13 '$chr_13' -chr_14 '$chr_14' -chr_15 '$chr_15' -chr_16 '$chr_16' -chr_17 '$chr_17' -chr_18 '$chr_18' -chr_19 '$chr_19' -chr_20 '$chr_20' -chr_21 '$chr_21' -chr_22 '$chr_22' -chr_X  '$chr_X'
+    dbsnp_annotate.py -sample '$sample' -pre_dbsnp_file '$pre_dbsnp_file' -chr_1 '$chr_1' -chr_2 '$chr_2' -chr_3 '$chr_3' -chr_4 '$chr_4' -chr_5 '$chr_5' -chr_6 '$chr_6' -chr_7 '$chr_7' -chr_8 '$chr_8' -chr_9 '$chr_9' -chr_10 '$chr_10' -chr_11 '$chr_11' -chr_12 '$chr_12' -chr_13 '$chr_13' -chr_14 '$chr_14' -chr_15 '$chr_15' -chr_16 '$chr_16' -chr_17 '$chr_17' -chr_18 '$chr_18' -chr_19 '$chr_19' -chr_20 '$chr_20' -chr_21 '$chr_21' -chr_22 '$chr_22' -chr_X  '$chr_X'
     """ 
 }

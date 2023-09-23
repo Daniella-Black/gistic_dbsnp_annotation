@@ -83,7 +83,7 @@ my_parser.add_argument('-chr_X',
 
 args = my_parser.parse_args()
 sample = args.sample
-gistc_input = args.pre_dbsnp_file
+gistic_input = args.pre_dbsnp_file
 chr_1 = args.chr_1
 chr_2 = args.chr_2
 chr_3 = args.chr_3

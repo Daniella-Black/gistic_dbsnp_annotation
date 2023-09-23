@@ -123,16 +123,16 @@ for key in chr_dict.keys():
 
 ##annotate the existing gistic inpput file with the number of dbsnp common snps occur in each segment
 gistic_input  = pd.read_csv(gistic_input, sep='\t')
-gistc_input.index = gistc_input.reset_index(drop=True)
+gistic_input.index = gistic_input.reset_index(drop=True)
 num_markers = list()
-for row in range(len(gistc_input.index)):
-    min = gistc_input[2][row]
-    max = gistc_input[3][row]
-    chr = gistc_input[1][row]
+for row in range(len(gistic_input.index)):
+    min = gistic_input[2][row]
+    max = gistic_input[3][row]
+    chr = gistic_input[1][row]
     tmp = snps[chr]
     num_markers.append(len(set([i for i in tmp if (i >= min) and (i <= max)])))
     
-gistc_input['Num Markers'] = num_markers    
+gistic_input['Num Markers'] = num_markers    
 
 #output
-gistc_input.to_csv(sample + '_gistic_input.txt')
+gistic_input.to_csv(sample + '_gistic_input.txt')
